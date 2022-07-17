@@ -1,0 +1,13 @@
+server:
+  config:
+    ✔ setup mongodb connection @done(22-07-17 16:06)
+    ✔ setup environment variables @done(22-07-17 15:43)
+    ✔ intall needed packages @done(22-07-17 15:43)
+    ✔ integrate middlewares @done(22-07-17 16:56)
+  models:
+    ✔ create the user model @done(22-07-17 16:05)
+    ✔ create the quiz model @done(22-07-17 16:05)
+    ✔ create the question model @done(22-07-17 16:05)
+  routes:
+    ✔ build the authentication route @done(22-07-17 19:51)
+    ☐ build the quiz route
