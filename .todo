@@ -10,4 +10,9 @@ server:
     ✔ create the question model @done(22-07-17 16:05)
   routes:
     ✔ build the authentication route @done(22-07-17 19:51)
-    ☐ build the quiz route
+    ✔ build the quiz route: @done(22-07-18 23:38)
+      ✔ get all quizzes @done(22-07-18 23:20)
+      ✔ create a quiz @done(22-07-18 20:16)
+      ✔ list user quizzes @done(22-07-18 22:10)
+      ✔ get a quiz @done(22-07-18 23:20)
+      ✔ delete a quiz @done(22-07-18 23:38)
