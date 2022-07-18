@@ -5,7 +5,6 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const configResponse = require('./utils/configResponse')
-const authenticateToken = require('./utils/authenticateToken')
 require('dotenv').config()
 
 const app = express();
@@ -31,9 +30,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(cors())
 
-app.use('/', require('./routes/index'));
-app.use('/auth', require('./routes/auth'));
-// app.use('/quiz', authenticateToken, () => { })
+app.use('/', require('./routes/index'))
+app.use('/auth', require('./routes/auth'))
+app.use('/quiz', require('./routes/quiz'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -47,8 +46,8 @@ app.use(function (err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 
   return res.error(
-    req.app.get('env') === 'development'
-      ? err.message : 'Server Error! Please try again.',
+    req.app.get('env') === 'production'
+      ? 'Server Error! Please try again.' : err.message,
     undefined, err.status || 500
   )
 })
