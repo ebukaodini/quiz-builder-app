@@ -12,7 +12,7 @@ const configResponse = (req, res, next) => {
     res.status(statusCode).json({
       status: false,
       message: message,
-      ...(error !== undefined) && { error: error }
+      ...(error !== undefined) && { errors: error }
     })
   }
 
