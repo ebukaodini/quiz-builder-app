@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const { body, validationResult } = require('express-validator')
 const passwordHash = require('password-hash')
-const randomstring = require("random-string-gen")
 const Users = require('../models/users.model')
 const mergeValidationErrors = require('../utils/mergeValidationErrors')
 
