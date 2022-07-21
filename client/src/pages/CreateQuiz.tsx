@@ -5,7 +5,7 @@ import { Question, Quiz, useAuthStore, useModalStore, useQuizStore } from "../st
 import { CheckCircle, Copy, Minus, User } from "react-feather"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { copyToClipboard, once, domain, formatDate } from "../utils"
+import { copyToClipboard, domain, formatDate } from "../utils"
 
 const ImgLogo = styled.img`
   height: 40px !important;
@@ -38,9 +38,7 @@ export const CreateQuiz: React.FC<{}> = () => {
   const [publishedQuiz, setPublishedQuiz] = useState<Quiz>()
 
   useEffect(() => {
-    return once(() => {
-      if (authenticated === false) push('/auth/login')
-    })
+    if (authenticated === false) push('/auth/login')
   }, [authenticated, push])
 
   useEffect(() => {
@@ -89,9 +87,14 @@ export const CreateQuiz: React.FC<{}> = () => {
     setCurrentQuestion({ ...currentQuestion!, [field]: value })
   }
   const handleUpdateAnswer = (index: number, field: 'option' | 'isAnswer', value: string | boolean) => {
-    const answer = { ...currentQuestion?.answers[index]!, [field]: value }
-    currentQuestion?.answers?.splice(index, 1, answer)
-    setCurrentQuestion({ ...currentQuestion!, answers: [...currentQuestion?.answers!] })
+    let answers = currentQuestion?.answers!
+    if (field === 'isAnswer' && currentQuestion?.type === 'single') {
+      answers = answers?.map(answer => ({ ...answer, isAnswer: false }))
+    }
+
+    const answer = { ...answers[index]!, [field]: value }
+    answers?.splice(index, 1, answer)
+    setCurrentQuestion({ ...currentQuestion!, answers: [...answers!] })
   }
 
   const handleReview = () => {
@@ -219,7 +222,7 @@ export const CreateQuiz: React.FC<{}> = () => {
                   {
                     currentQuestion?.answers.map((answer, index) =>
                       <div key={index} className="mb-2 d-flex align-items-center py-0 px-2 gap-4">
-                        <CheckboxInput className="form-check" readOnly={true} checked={answer.isAnswer} />
+                        <CheckboxInput className="form-check" readOnly={true} type={currentQuestion.type === 'multiple' ? 'checkbox' : 'radio'} name="answerOption" checked={answer.isAnswer} />
                         <span className="fs-5">{answer.option}</span>
                       </div>
                     )
@@ -260,7 +263,7 @@ export const CreateQuiz: React.FC<{}> = () => {
               {
                 currentQuestion?.answers.map((answer, index) =>
                   <div key={index} className="mb-2 d-flex align-items-center py-0 px-2 gap-3 border border-grey">
-                    <CheckboxInput className="form-check"
+                    <CheckboxInput className="form-check" type={currentQuestion.type === 'multiple' ? 'checkbox' : 'radio'} name="answerOption"
                       checked={answer.isAnswer} onChange={e => handleUpdateAnswer(index, 'isAnswer', e.target.checked)} />
                     <Input id="title" type='text' value={answer.option} onChange={e => handleUpdateAnswer(index, 'option', e.target.value)}
                       placeholder="Enter answer option" autoFocus={true} className="form-control fs-6 border-0" />

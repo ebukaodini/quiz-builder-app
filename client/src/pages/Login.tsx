@@ -44,7 +44,7 @@ export const Login: React.FC<{}> = () => {
         toast(resp.message)
         push('/')
       } else {
-        toast(resp.message, 'success')
+        toast(resp.message, 'danger')
         setErrors(errors)
       }
     } catch (error: any) {

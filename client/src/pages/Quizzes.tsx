@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { Button, Empty, IconButton, Input, LinkButton, PageWrapper } from "../components"
 import Logo from '../assets/textlogo.svg'
-import { useAuthStore, useModalStore, useQuizStore } from "../store"
+import { Quiz, useAuthStore, useModalStore, useQuizStore } from "../store"
 import { Search, User } from "react-feather"
 import { formatDate } from "../utils"
 import { useState } from "react"
@@ -18,16 +18,34 @@ const Hero = styled.div`
 export const Quizzes: React.FC<{}> = () => {
 
   const { quizzes } = useQuizStore()
+  const [filterQuizzes, setFilteredQuizzes] = useState<Quiz[]>(quizzes)
   const { authenticated, logout } = useAuthStore()
   const { confirm } = useModalStore()
   const [pagination, setPagination] = useState({
     current: 1,
-    total: Math.ceil(quizzes.length / 9),
+    total: Math.ceil(filterQuizzes.length / 9),
     limit: 9
   })
 
   const handleLogout = () => {
     confirm('Are you sure you want to log out?', 'danger', async () => logout())
+  }
+  const handleSearch = (e: any) => {
+    e.preventDefault()
+    const search = e.target[0].value.toLowerCase().trim()
+
+    const filter = quizzes?.filter(quiz =>
+      quiz.title.toLowerCase().includes(search)
+    )!
+    setFilteredQuizzes(filter)
+    setPagination({ ...pagination, current: 1, total: Math.ceil(filter.length / 9) })
+  }
+  const handleResetSearch = (e: any) => {
+    const search = e.target.value
+    if (search.trim().length === 0) {
+      setFilteredQuizzes(quizzes)
+      setPagination({ ...pagination, current: 1, total: Math.ceil(quizzes.length / 9) })
+    }
   }
 
   return (
@@ -41,10 +59,10 @@ export const Quizzes: React.FC<{}> = () => {
               <img src={Logo} alt="Quiz App" title="Quiz App" />
             </LogoWrapper>
 
-            <form className="w-lg-50 w-100">
+            <form onSubmit={handleSearch} className="w-lg-50 w-100">
               <div className="position-relative">
-                <Input type='search' className="form-control px-3 py-3 mb-3" placeholder="search quiz" />
-                <IconButton title='Toggle password'
+                <Input type='search' onChange={handleResetSearch} className="form-control px-3 py-3 mb-3" placeholder="search quiz" />
+                <IconButton title='Search'
                   className="bg-transparent text-grey border-0 position-absolute top-50 end-0 translate-middle p-0">
                   <Search size={18} />
                 </IconButton>
@@ -69,10 +87,10 @@ export const Quizzes: React.FC<{}> = () => {
 
         <div className="container w-100 mb-5">
           {
-            quizzes.length > 0 ?
+            filterQuizzes.length > 0 ?
               <div className="row">
                 {
-                  quizzes
+                  filterQuizzes
                     ?.slice(((pagination.current - 1) * pagination.limit), (pagination.limit * pagination.current))
                     .map((quiz, index) => (
                       <div key={index} className="col-12 col-md-6 col-lg-4 mb-3 p-3">
@@ -108,7 +126,7 @@ export const Quizzes: React.FC<{}> = () => {
       <div className="w-100 position-fixed start-0 end-0 bottom-0 mt-5">
         <div className="container w-100 bg-white py-2 px-3 shadow-sm d-flex justify-content-between align-items-center">
           <span className="text-secondary">Showing page {pagination.current} of {pagination.total}</span>
-          
+
           <div className="d-flex gap-2">
             <Button disabled={pagination.current <= 1} onClick={() => {
               setPagination({ ...pagination, current: pagination.current - 1 })

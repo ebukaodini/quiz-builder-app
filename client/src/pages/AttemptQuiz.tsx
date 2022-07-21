@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { Button, CheckboxInput, PageWrapper } from "../components"
 import Logo from '../assets/textlogo.svg'
-import { Question, Quiz, useAuthStore, useModalStore, useQuizStore } from "../store"
+import { Question, Quiz, useModalStore, useQuizStore } from "../store"
 import { useEffect, useState } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import { formatDate, once } from "../utils"
@@ -18,9 +18,8 @@ const Hero = styled.div`
 
 export const AttemptQuiz: React.FC<{}> = () => {
 
-  const { quizzes } = useQuizStore()
-  const { authenticated } = useAuthStore()
-  const { replace, goBack } = useHistory()
+  const { getQuiz, attemptQuiz } = useQuizStore()
+  const { push, replace, goBack } = useHistory()
   const { permalink } = useParams<{ permalink: string }>()
   const { toast, loading, confirm } = useModalStore()
   const [quiz, setQuiz] = useState<Quiz>()
@@ -31,22 +30,25 @@ export const AttemptQuiz: React.FC<{}> = () => {
   })
 
   useEffect(() => {
-    return once(() => {
-      if (authenticated === false) replace('/auth/login')
-    })
-  }, [authenticated, replace])
-
-  useEffect(() => {
     loading(true, 'Loading quiz...')
-    return once(() => {
-      const quiz = quizzes.find(quiz => quiz.permalink === permalink)
+    return once(async () => {
+      const resp = await getQuiz(permalink)
       loading(false)
-      if (quiz === undefined) {
+
+      if (resp.status === false) {
         replace('/')
         toast('Quiz not found', 'danger')
         return
       }
-      setQuiz(quiz)
+      const quiz: Quiz = resp.data.quiz
+
+      // default all answer options to false
+      const nQuiz = {
+        ...quiz, questions: quiz.questions.map(question => {
+          return { ...question, answers: question.answers.map(answer => ({ ...answer, isSelected: false })) }
+        })
+      }
+      setQuiz(nQuiz)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goBack, permalink, toast])
@@ -55,21 +57,64 @@ export const AttemptQuiz: React.FC<{}> = () => {
     setCurrentQuestion(quiz?.questions[(pagination.current - 1)])
   }, [pagination, quiz?.questions])
 
+  const saveCurrentQuestion = () => {
+    quiz?.questions.splice((pagination.current - 1), 1, currentQuestion!)
+    setQuiz({ ...quiz! })
+  }
   const handleNextQuestion = () => {
-    setPagination({ ...pagination, current: pagination.current + 1 })
+    if (currentQuestion?.answers.some(answer => answer.isSelected === true) === true) {
+      saveCurrentQuestion()
+      setPagination({ ...pagination, current: pagination.current + 1 })
+    } else toast('Please select an answer', 'danger')
   }
   const handlePreviousQuestion = () => {
+    saveCurrentQuestion()
     setPagination({ ...pagination, current: pagination.current - 1 })
   }
-  const handleancel = () => {
+  const handleCancel = () => {
     confirm('Are you sure you want to cancel this quiz?', 'danger', async () => {
       goBack()
     })
   }
+  const handleSelectAnswer = (index: number, value: boolean) => {
+    let answers = currentQuestion?.answers!
+    if (currentQuestion?.type === 'single') {
+      answers = answers?.map(answer => ({ ...answer, isSelected: false }))
+    }
+
+    const answer = { ...answers[index]!, isSelected: value }
+    answers.splice(index, 1, answer)
+    setCurrentQuestion({ ...currentQuestion!, answers: [...answers!] })
+  }
   const handleSubmitQuiz = () => {
-    confirm('Are you sure you want to submit this quiz?', 'success', async () => {
-      toast('Submitted!')
-    })
+    if (currentQuestion?.answers.some(answer => answer.isSelected === true) === true) {
+      saveCurrentQuestion()
+      confirm('Are you sure you want to submit this quiz?', 'success', async () => {
+        loading(true, 'Calculating result...')
+        attemptQuiz(quiz?.permalink!)
+          .then(resp => {
+            loading(false)
+            let total = quiz?.questions.length!
+            let correct = 0
+            quiz?.questions.forEach(question => {
+              if (question.answers.every(answer => answer.isAnswer === answer.isSelected) === true)
+                correct++
+            })
+
+            confirm(
+              <div>
+                <p className="fs-2">Submitted!</p>
+                <p>
+                  You answered {correct} questions correctly out of {total}.
+                  Your score percentage is {Math.round((correct / total) * 100)}%
+                </p>
+              </div>, 'success',
+              async () => window.location.reload(), async () => push('/'),
+              'Take this quiz again', 'Go back'
+            )
+          })
+      })
+    } else toast('Please select an answer', 'danger')
   }
 
   return (
@@ -82,11 +127,11 @@ export const AttemptQuiz: React.FC<{}> = () => {
 
             <div className="d-flex flex-column justify-content-center al ign-items-center">
               <ImgLogo src={Logo} alt="Quiz App" title="Quiz App" />
-              <h6 className="ms-5 m-0">My Quizzes - Details</h6>
+              <h6 className="ms-5 m-0">Attempt</h6>
             </div>
 
             <div className="d-flex gap-2 my-auto">
-              <Button onClick={handleancel}
+              <Button onClick={handleCancel}
                 className="btn-sm btn-danger text-light py-2 px-3" title='Cancel quiz'>Cancel quiz</Button>
             </div>
 
@@ -106,15 +151,15 @@ export const AttemptQuiz: React.FC<{}> = () => {
 
           <div className="mb-5 w-100 d-flex flex-column gap-1">
             <span className="fs-4">{currentQuestion?.question}</span>
-            <span className="fs-7 text-danger"><b>NOTE:</b> This is a {currentQuestion?.type} choice question.</span>
+            <span className="fs-7 text-danger"><b>NOTE:</b> This is a {currentQuestion?.type} choice question. {currentQuestion?.type === 'multiple' && 'Select all that applies.'}</span>
           </div>
 
           <div>
             {
               currentQuestion?.answers.map((answer, index) =>
                 <div key={index} className="mb-2 d-flex align-items-center py-0 px-2 gap-4">
-                  <CheckboxInput className="form-check" readOnly={true} />
-                  <span className="fs-5">{answer.option}</span>
+                  <CheckboxInput type={currentQuestion.type === 'multiple' ? 'checkbox' : 'radio'} name="answerOption" className="form-check cursor-pointer" checked={answer.isSelected} onChange={e => handleSelectAnswer(index, e.target.checked)} id={'option' + index} />
+                  <label htmlFor={'option' + index} className="fs-5 cursor-pointer">{answer.option}</label>
                 </div>
               )
             }
@@ -142,7 +187,7 @@ export const AttemptQuiz: React.FC<{}> = () => {
                 >
                   Submit
                   <Check size={16} />
-                  </Button> :
+                </Button> :
                 <Button disabled={pagination.current === quiz?.questions.length}
                   className="btn-sm btn-outline-secondary border-secondary py-2 px-3"
                   title='Next' onClick={handleNextQuestion}
