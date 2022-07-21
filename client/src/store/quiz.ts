@@ -1,22 +1,31 @@
 import create, { State } from "zustand";
 import { persist } from "zustand/middleware";
 import { appID, authToken, request } from "../utils";
+import { User } from "./auth";
+
+export interface Question {
+  order: number,
+  type: 'single' | 'multiple',
+  question: string,
+  answers: {
+    option: string,
+    isAnswer: boolean,
+  }[]
+}
 
 export interface Quiz {
   id: string
-  firstname: string
-  lastname: string
-  email: string
-  password: string
+  title: string
+  user?: Partial<User>
+  permalink: string
+  attempt: number
+  questions: Question[]
   created: string
 }
 
 export type QuizCredentials = {
-  firstname: string
-  lastname: string
-  email: string
-  password: string
-  cpassword: string
+  title: string
+  questions: Question[]
 }
 
 interface QuizState extends State {
@@ -38,6 +47,9 @@ interface QuizMethods extends State {
   getQuiz: (
     link: string
   ) => Promise<any>
+  deleteQuiz: (
+    id: string
+  ) => Promise<any>
 }
 
 export const useQuizStore = create<QuizState & QuizMethods>(
@@ -49,7 +61,6 @@ export const useQuizStore = create<QuizState & QuizMethods>(
       restoreDefault: () => {
         console.log('restore auth to default...')
         set({
-          quizzes: [],
           userQuizzes: [],
           currentQuiz: undefined,
         })
@@ -65,6 +76,8 @@ export const useQuizStore = create<QuizState & QuizMethods>(
         })
           .then(async resp => {
             if (resp.status === true) {
+              await get().getQuizzes()
+              await get().getUserQuizzes()
               set({
                 currentQuiz: resp.data.quiz
               })
@@ -77,7 +90,7 @@ export const useQuizStore = create<QuizState & QuizMethods>(
           .then(async resp => {
             if (resp.status === true) {
               set({
-                quizzes: resp.data.quizzes
+                quizzes: resp.data.list
               })
             }
             return resp
@@ -90,7 +103,7 @@ export const useQuizStore = create<QuizState & QuizMethods>(
           .then(async resp => {
             if (resp.status === true) {
               set({
-                userQuizzes: resp.data.quizzes
+                userQuizzes: resp.data.list
               })
             }
             return resp
@@ -103,6 +116,18 @@ export const useQuizStore = create<QuizState & QuizMethods>(
               set({
                 currentQuiz: resp.data.quiz
               })
+            }
+            return resp
+          })
+      },
+      deleteQuiz: async (id) => {
+        return await request('/quiz/' + id, 'DELETE', undefined, {
+          ...authToken()
+        })
+          .then(async resp => {
+            if (resp.status === true) {
+              await get().getQuizzes()
+              await get().getUserQuizzes()
             }
             return resp
           })

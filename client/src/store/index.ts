@@ -3,4 +3,4 @@ export { useQuizStore } from './quiz'
 export { useModalStore } from './modals'
 
 export type { RegisterCredentials, LoginCredentials, User } from './auth'
-export type { QuizCredentials, Quiz } from './quiz'
+export type { QuizCredentials, Quiz, Question } from './quiz'

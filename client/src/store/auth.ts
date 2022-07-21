@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState & AuthMethods>(
                 authenticated: true
               })
 
-              // get user details
+              // get user quizzes
               await useQuizStore.getState().getUserQuizzes()
 
             }
@@ -83,8 +83,8 @@ export const useAuthStore = create<AuthState & AuthMethods>(
                 authenticated: true
               })
 
-              // get user details
-              // await useContractStore.getState().getContracts()
+              // get user quizzes
+              await useQuizStore.getState().getUserQuizzes()
 
             }
             return resp
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthState & AuthMethods>(
       },
       logout: () => {
         get().restoreDefault()
-        // useContractStore.getState().restoreDefault()
+        useQuizStore.getState().restoreDefault()
       }
     }), {
     name: appID + '.auth'
