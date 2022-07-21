@@ -9,7 +9,6 @@ import './themes/bootstrap.extended.scss';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Theme } from './themes/themes';
-// import './utils/toSentenceCase'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
