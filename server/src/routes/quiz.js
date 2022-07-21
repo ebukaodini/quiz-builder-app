@@ -63,7 +63,8 @@ router.post('/',
 
       const errors = validationResult(req).array();
       if (errors.length > 0)
-        return res.error('Invalid fields', mergeValidationErrors(errors))
+        // return res.error('Invalid fields', mergeValidationErrors(errors))
+        return res.error(errors[0].msg)
 
       const { title, questions } = req.body
 
@@ -149,11 +150,12 @@ router.get('/',
     try {
 
       Quizzes.find()
+        .populate('user', 'firstname lastname -_id')
         .then(async quizzes => {
 
           const formattedQuizzes = quizzes.map(quiz => {
-            const { title, permalink, attempt, created, _id: id } = quiz
-            return { title, permalink, attempt, created, id }
+            const { title, permalink, attempt, created, user, _id: id } = quiz
+            return { title, permalink, attempt, created, user, id }
           })
 
           const quizIds = formattedQuizzes.map(quiz => quiz.id.toString())
@@ -209,13 +211,14 @@ router.get('/:permalink',
         return res.error('Invalid quiz link.')
 
       Quizzes.findOne({ permalink: req.params.permalink })
+        .populate('user', 'firstname lastname -_id')
         .then(async quiz => {
 
           if (quiz === null)
             return res.error('Invalid quiz link.')
 
-          const { title, permalink, attempt, created, _id: id } = quiz
-          const formattedQuiz = { title, permalink, attempt, created, id }
+          const { title, permalink, attempt, created, user, _id: id } = quiz
+          const formattedQuiz = { title, permalink, attempt, created, user, id }
 
           // get all questions related to quiz
           let quizWithQuestions = {}
