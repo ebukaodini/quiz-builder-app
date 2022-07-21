@@ -25,6 +25,7 @@ export const ConfirmModal: React.FC = () => {
                   className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
+                  onClick={() => confirmProps?.onCancel!()}
                 />
 
               </div>

@@ -47,5 +47,5 @@ export const TextareaInput: React.FC<React.InputHTMLAttributes<HTMLTextAreaEleme
 }
 
 export const CheckboxInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => {
-  return <StyledInput {...props} type='checkbox' className={`form-check-input border-dark text-dark ${props.className}`} />
+  return <StyledInput {...props} type={props.type ?? 'checkbox'} className={`form-check-input border-dark text-dark ${props.className}`} />
 }
