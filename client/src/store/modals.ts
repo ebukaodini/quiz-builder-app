@@ -66,63 +66,11 @@ interface ConfirmModalMethods extends State {
   ) => void
 }
 
-// ---------------
-
-type ModalProps = {
-  component: JSX.Element
-  size: 'sm' | 'md' | 'lg' | 'xl'
-  centered: boolean
-  state: any
-}
-
-interface DynamicModalState extends State {
-  modalProps?: ModalProps
-}
-
-interface DynamicModalMethods extends State {
-  modal: (
-    component: ModalProps['component'],
-    size?: ModalProps['size'],
-    centered?: ModalProps['centered'],
-    state?: ModalProps['state']
-  ) => void
-  setModalState: (state: any) => void,
-  closeModal: () => void
-}
-
-// ---------------
-
-type FlyoutModalProps = {
-  component: JSX.Element
-  backdrop?: boolean
-  pad?: boolean
-  position?: 'top' | 'bottom' | 'start' | 'end'
-  state?: any
-}
-
-interface FlyoutModalState extends State {
-  flyoutModalProps?: FlyoutModalProps
-}
-
-interface FlyoutModalMethods extends State {
-  flyoutModal: (
-    component: FlyoutModalProps['component'],
-    position?: FlyoutModalProps['position'],
-    pad?: FlyoutModalProps['pad'],
-    backdrop?: FlyoutModalProps['backdrop'],
-    state?: FlyoutModalProps['state']
-  ) => void
-  setFlyoutModalState: (state: any) => void,
-  closeFlyoutModal: () => void
-}
-
 export const useModalStore = create
   <
     ToastState & ToastMethodsState &
     LoadingModalState & LoadingModalMethods &
-    ConfirmModalState & ConfirmModalMethods &
-    DynamicModalState & DynamicModalMethods &
-    FlyoutModalState & FlyoutModalMethods
+    ConfirmModalState & ConfirmModalMethods
   >(
     (set, get) => ({
       toastList: [],
@@ -188,72 +136,6 @@ export const useModalStore = create
 
         document.getElementById('app-confirm-modal-toggle-btn')?.click()
       },
-
-      modalProps: undefined,
-      modal: (component, size, centered, state) => {
-
-        set({
-          modalProps: {
-            component,
-            size: size!,
-            centered: centered!,
-            state: state!
-          }
-        })
-
-        document.getElementById('app-modal-toggle-btn')?.click()
-      },
-
-      setModalState: (state) => {
-        const props = get()?.modalProps!
-        props.state = state
-
-        set({
-          modalProps: { ...props }
-        })
-      },
-
-      closeModal: () => {
-        document.getElementById('app-modal-toggle-btn')?.click()
-        set({
-          modalProps: undefined
-        })
-      },
-
-      flyoutModalProps: undefined,
-      flyoutModal: (component, position, pad, backdrop, state) => {
-
-        set({
-          flyoutModalProps: {
-            component,
-            position: position ?? 'end',
-            pad: pad ?? true,
-            backdrop: backdrop ?? true,
-            state: state!
-          }
-        })
-
-        setTimeout(() => {
-          document.getElementById('app-flyout-modal-toggle-btn')?.click()
-        }, 250);
-
-      },
-
-      setFlyoutModalState: (state) => {
-        const props = get()?.modalProps!
-        props.state = state
-
-        set({
-          modalProps: { ...props }
-        })
-      },
-
-      closeFlyoutModal: () => {
-        document.getElementById('app-flyout-modal-toggle-btn')?.click()
-        set({
-          modalProps: undefined
-        })
-      }
 
     })
   )

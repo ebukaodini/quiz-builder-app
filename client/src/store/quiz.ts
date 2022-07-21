@@ -10,6 +10,7 @@ export interface Question {
   answers: {
     option: string,
     isAnswer: boolean,
+    isSelected?: boolean
   }[]
 }
 
@@ -45,6 +46,9 @@ interface QuizMethods extends State {
   getQuizzes: () => Promise<any>
   getUserQuizzes: () => Promise<any>
   getQuiz: (
+    link: string
+  ) => Promise<any>
+  attemptQuiz: (
     link: string
   ) => Promise<any>
   deleteQuiz: (
@@ -116,6 +120,15 @@ export const useQuizStore = create<QuizState & QuizMethods>(
               set({
                 currentQuiz: resp.data.quiz
               })
+            }
+            return resp
+          })
+      },
+      attemptQuiz: async (link) => {
+        return await request('/quiz/' + link, 'PATCH', undefined)
+          .then(async resp => {
+            if (resp.status === true) {
+              await get().getQuizzes()
             }
             return resp
           })
