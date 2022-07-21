@@ -24,7 +24,7 @@ export const CreateQuiz: React.FC<{}> = () => {
   const { push, goBack } = useHistory()
   const newAnswer = { option: '', isAnswer: false }
   const newQuestion: Question = {
-    question: '', order: 1, type: 'single', answers: [newAnswer]
+    question: '', type: 'single', answers: [newAnswer]
   }
   const [title, setTitle] = useState<string>('')
   const [questions, setQuestions] = useState<Question[]>([newQuestion])
@@ -193,10 +193,11 @@ export const CreateQuiz: React.FC<{}> = () => {
                     </span>
 
                     <div className="d-flex gap-2">
-                      <Button onClick={() => window.location.reload()} title="Create another quiz" className="btn-primary dark btn-sm">Create another quiz</Button>
-                      <LinkButton to={`/q/${publishedQuiz?.permalink}`} title="Attempt quiz" className="btn-primary dark btn-sm">Attempt</LinkButton>
+                      <Button onClick={goBack} title="Go back" className="btn-primary btn-sm">Go back</Button>
+                      <Button onClick={() => window.location.reload()} title="Create another quiz" className="btn-primary btn-sm">Create another quiz</Button>
+                      <LinkButton to={`/q/${publishedQuiz?.permalink}`} title="Attempt quiz" className="btn-primary btn-sm">Attempt</LinkButton>
                       <Button title="Share quiz" onClick={handleCopy}
-                        className="btn-primary dark btn-sm d-flex align-items-center gap-2">
+                        className="btn-primary btn-sm d-flex align-items-center gap-2">
                         <Copy size={16} /> Share</Button>
                     </div>
 

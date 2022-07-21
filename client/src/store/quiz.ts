@@ -4,7 +4,6 @@ import { appID, authToken, request } from "../utils";
 import { User } from "./auth";
 
 export interface Question {
-  order: number,
   type: 'single' | 'multiple',
   question: string,
   answers: {

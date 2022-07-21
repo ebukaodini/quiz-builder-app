@@ -87,12 +87,7 @@ describe('/quiz', () => {
             res.type.should.equal('application/json');
             res.body.should.be.a('object');
             res.body.should.have.property('message');
-            res.body.message.should.equal('Invalid fields')
-            res.body.should.have.property('errors')
-            res.body.errors.should.have.property('title')
-            res.body.errors.title[0].should.equal('Please provide a title for this quiz.')
-            res.body.errors.should.have.property('questions')
-            res.body.errors.questions[0].should.equal('Please add atleast one question.')
+            res.body.message.should.equal('Please provide a title for this quiz.')
             done()
           })
       })
@@ -114,10 +109,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('There is an invalid question.')
+              res.body.message.should.equal('There is an invalid question.')
               done()
             })
         })
@@ -127,7 +119,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "multiples",
                 question: "Question 2",
                 answers: []
@@ -144,10 +135,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Question type can only be single or multiple.')
+              res.body.message.should.equal('Question type can only be single or multiple.')
               done()
             })
         })
@@ -157,7 +145,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "multiple",
                 question: "",
                 answers: []
@@ -174,10 +161,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Question text cannot be empty.')
+              res.body.message.should.equal('Question text cannot be empty.')
               done()
             })
         })
@@ -191,7 +175,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "single",
                 question: "Question 1",
                 answers: []
@@ -208,10 +191,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Please add atleast one question answer.')
+              res.body.message.should.equal('Please add atleast one question answer.')
               done()
             })
         })
@@ -221,7 +201,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "single",
                 question: "Question 1",
                 answers: [
@@ -247,10 +226,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Question must have a valid answer.')
+              res.body.message.should.equal('Question must have a valid answer.')
               done()
             })
         })
@@ -260,7 +236,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "single",
                 question: "Question 1",
                 answers: [
@@ -286,10 +261,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Single question type can only have one valid answer.')
+              res.body.message.should.equal('Single question type can only have one valid answer.')
               done()
             })
         })
@@ -299,7 +271,6 @@ describe('/quiz', () => {
             title: "Sample Quiz",
             questions: [
               {
-                order: 1,
                 type: "multiple",
                 question: "Question 1",
                 answers: [
@@ -329,10 +300,7 @@ describe('/quiz', () => {
               res.type.should.equal('application/json');
               res.body.should.be.a('object');
               res.body.should.have.property('message');
-              res.body.message.should.equal('Invalid fields')
-              res.body.should.have.property('errors')
-              res.body.errors.should.have.property('questions')
-              res.body.errors.questions[0].should.equal('Multiple question type must have more than one valid answer.')
+              res.body.message.should.equal('Multiple question type must have more than one valid answer.')
               done()
             })
         })
@@ -348,7 +316,6 @@ describe('/quiz', () => {
           title: "Sample Quiz",
           questions: [
             {
-              order: 1,
               type: "single",
               question: "Question 1",
               answers: [
@@ -445,7 +412,6 @@ describe('/quiz', () => {
           title: "Sample Quiz",
           questions: [
             {
-              order: 1,
               type: "single",
               question: "Question 1",
               answers: [
@@ -464,7 +430,6 @@ describe('/quiz', () => {
               ]
             },
             {
-              order: 1,
               type: "single",
               question: "Question 2",
               answers: [
@@ -518,7 +483,6 @@ describe('/quiz', () => {
           res.body.data.list.should.be.a('array')
           res.body.data.list[0].should.have.property('questions')
           res.body.data.list[0].questions.should.be.a('array')
-          res.body.data.list[0].questions[0].should.have.property('order')
           res.body.data.list[0].questions[0].should.have.property('type')
           res.body.data.list[0].questions[0].should.have.property('question')
           res.body.data.list[0].questions[0].should.have.property('answers')
@@ -621,7 +585,6 @@ describe('/quiz', () => {
           title: "Sample Quiz",
           questions: [
             {
-              order: 1,
               type: "single",
               question: "Question 1",
               answers: [
@@ -640,7 +603,6 @@ describe('/quiz', () => {
               ]
             },
             {
-              order: 1,
               type: "single",
               question: "Question 2",
               answers: [
@@ -675,7 +637,6 @@ describe('/quiz', () => {
           title: "Sample Quiz 2",
           questions: [
             {
-              order: 1,
               type: "single",
               question: "Question 1",
               answers: [
@@ -694,7 +655,6 @@ describe('/quiz', () => {
               ]
             },
             {
-              order: 1,
               type: "single",
               question: "Question 2",
               answers: [
@@ -733,7 +693,6 @@ describe('/quiz', () => {
           res.body.data.list.should.be.a('array')
           res.body.data.list[0].should.have.property('questions')
           res.body.data.list[0].questions.should.be.a('array')
-          res.body.data.list[0].questions[0].should.have.property('order')
           res.body.data.list[0].questions[0].should.have.property('type')
           res.body.data.list[0].questions[0].should.have.property('question')
           res.body.data.list[0].questions[0].should.have.property('answers')

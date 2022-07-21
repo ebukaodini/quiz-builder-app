@@ -18,7 +18,7 @@ router.post('/',
 
       if (questions.every(question => {
         const keys = Object.keys(question)
-        return keys.includes('order') && keys.includes('type') && keys.includes('question') && keys.includes('answers')
+        return keys.includes('type') && keys.includes('question') && keys.includes('answers')
       }) == false)
         return Promise.reject('There is an invalid question.')
 
@@ -36,6 +36,11 @@ router.post('/',
         return question.answers.length > 0
       }) == false)
         return Promise.reject('Please add atleast one question answer.')
+
+      if (questions.every(question => {
+        return question.answers.filter(a => a.option.trim().length > 0 ).length > 0
+      }) == false)
+        return Promise.reject('Answer option cannot be empty.')
 
       if (questions.every(question => {
         return question.answers.filter(a => a.isAnswer === true).length > 0
@@ -84,9 +89,10 @@ router.post('/',
         await Questions.insertMany([...updatedQuestions])
 
         return res.success('Quiz published.', { quiz: { title, permalink, attempt, created, id } })
-      })
+      }).catch(error => next(error))
 
     } catch (error) {
+      console.log(error.message)
       next(error)
     }
   })
@@ -117,15 +123,15 @@ router.get('/list',
               formattedQuizzes.forEach(quiz => {
                 const quizQuestions = questions.filter(question =>
                   question.quiz.toString() === quiz.id.toString()
-                ).sort((a, b) => a.order > b.order)
+                )
 
                 const formattedQuestions = quizQuestions.map(ques => {
-                  const { order, type, question, answers } = ques
+                  const { type, question, answers } = ques
                   formattedAnswers = answers.map(ans => {
                     const { option, isAnswer } = ans
                     return { option, isAnswer }
                   })
-                  return { order, type, question, answers: formattedAnswers }
+                  return { type, question, answers: formattedAnswers }
                 })
 
                 quizWithQuestions.push({
@@ -170,15 +176,15 @@ router.get('/',
                 formattedQuizzes.forEach(quiz => {
                   const quizQuestions = questions.filter(question =>
                     question.quiz.toString() === quiz.id.toString()
-                  ).sort((a, b) => a.order > b.order)
+                  )
 
                   const formattedQuestions = quizQuestions.map(ques => {
-                    const { order, type, question, answers } = ques
+                    const { type, question, answers } = ques
                     formattedAnswers = answers.map(ans => {
                       const { option, isAnswer } = ans
                       return { option, isAnswer }
                     })
-                    return { order, type, question, answers: formattedAnswers }
+                    return { type, question, answers: formattedAnswers }
                   })
 
                   quizWithQuestions.push({
@@ -228,15 +234,14 @@ router.get('/:permalink',
             }).then(questions => {
               if (questions !== null) {
                 const quizQuestions = questions
-                  .sort((a, b) => a.order > b.order)
 
                 const formattedQuestions = quizQuestions.map(ques => {
-                  const { order, type, question, answers } = ques
+                  const { type, question, answers } = ques
                   formattedAnswers = answers.map(ans => {
                     const { option, isAnswer } = ans
                     return { option, isAnswer }
                   })
-                  return { order, type, question, answers: formattedAnswers }
+                  return { type, question, answers: formattedAnswers }
                 })
 
                 quizWithQuestions = {

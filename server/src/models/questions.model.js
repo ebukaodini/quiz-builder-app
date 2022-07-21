@@ -2,7 +2,6 @@ const { Schema, model } = require('mongoose');
 
 let schema = Schema({
   quiz: { type: Schema.Types.ObjectId, index: true, required: true, ref: 'Quiz' },
-  order: { type: Number, required: true },
   type: { type: String, default: 'single', enum: ['single', 'multiple'] },
   question: { type: String, required: true },
   answers: [{
