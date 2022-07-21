@@ -254,6 +254,36 @@ router.get('/:permalink',
     }
   })
 
+router.patch('/:permalink',
+  param('permalink', 'Invalid quiz link.')
+    .trim()
+    .isAlphanumeric()
+    .custom(link => link.length === 6),
+  async (req, res, next) => {
+    try {
+
+      const errors = validationResult(req).array();
+      if (errors.length > 0)
+        return res.error('Invalid quiz link.')
+
+      Quizzes.findOne({ permalink: req.params.permalink })
+        .populate('user', 'firstname lastname -_id')
+        .then(async quiz => {
+
+          if (quiz === null)
+            return res.error('Invalid quiz link.')
+
+          quiz.attempt = quiz.attempt + 1
+          quiz.save()
+
+          return res.success('Quiz updated.')
+        })
+
+    } catch (error) {
+      next(error)
+    }
+  })
+
 router.delete('/:id',
   param('id', 'Invalid quiz id.')
     .trim()
