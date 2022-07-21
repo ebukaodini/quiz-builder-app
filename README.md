@@ -3,7 +3,7 @@ A simple quiz builder
 
 ## Server
 
-### Setup
+#### Setup
 To setup this project, create a `.env` file and copy the code below into the file.
 
 ```.env
@@ -21,26 +21,29 @@ $ node -i
 ```
 then
 ```bash
-> require('crypto').randomBytes(64).toString('hex')
+> require('crypto').randomBytes(32).toString('hex')
 ```
 
 Replace <generated-token-secret> with the hexa-decimal output from the command above.
 
 
-## Test
+#### Test
 ```bash
 $ npm test
 $ npm run test:file <path-to-test-file>
 ```
 
 
-## Run
+#### Run
 ```bash
 $ npm start
 $ npm run start:dev
 ```
 
 
-## API Documentation
+#### API Documentation
+https://
 
 
+
+## Client
