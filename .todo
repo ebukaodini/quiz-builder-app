@@ -37,12 +37,10 @@ client:
     ✔ build the quiz review page @done(22-07-20 23:44)
     ✔ build the user quiz page @done(22-07-21 01:21)
     ✔ build the quiz details page @done(22-07-21 01:21)
-    ☐ build the take quiz page
-  test:
-    ☐ write test for the pages
+    ✔ build the take quiz page @done(22-07-21 13:30)
 .
 General:
-  ☐ document the project with a README.md file
-  ☐ publish postman documentation
+  ✔ document the project with a README.md file @done(22-07-21 13:42)
+  ✔ publish postman documentation @done(22-07-21 17:19)
   ☐ prepare short video
 .  
