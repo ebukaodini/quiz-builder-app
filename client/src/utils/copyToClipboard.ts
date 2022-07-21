@@ -1,6 +1,6 @@
 import { useModalStore } from "../store"
 
-export const copyToClipboard = (text: string) => {
+export const copyToClipboard = (text: string, msg?: string) => {
   navigator.clipboard.writeText(text)
-  useModalStore.getState().toast("Copied to clipboard", 'success')
+  useModalStore.getState().toast(msg ?? "Copied to clipboard", 'success')
 }
