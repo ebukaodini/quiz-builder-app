@@ -75,12 +75,6 @@ then
 ```
 
 
-### Test
-```bash
-$ npm test
-```
-
-
 ### Run
 ```bash
 $ npm start
