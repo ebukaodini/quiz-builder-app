@@ -16,3 +16,33 @@ server:
       ✔ list user quizzes @done(22-07-18 22:10)
       ✔ get a quiz @done(22-07-18 23:20)
       ✔ delete a quiz @done(22-07-18 23:38)
+  tests:
+    ✔ test the auth route @done(22-07-19 13:04)
+    ✔ test the quiz route @done(22-07-19 13:04)
+.
+client:
+  config:
+    ✔ setup react @done(22-07-19 20:17)
+    ✔ setup app folder structure @done(22-07-19 20:17)
+    ✔ add assets @done(22-07-20 11:47)
+    ✔ configure themes @done(22-07-20 11:47)
+  stores:
+    ✔ build the auth store @done(22-07-20 11:47)
+    ✔ build the quiz store @done(22-07-20 11:47)
+  pages:
+    ✔ build the register page @done(22-07-20 11:47)
+    ✔ build the login page @done(22-07-20 11:47)
+    ✔ build the quizzes page @done(22-07-20 16:22)
+    ✔ build the create quiz page @done(22-07-20 23:44)
+    ✔ build the quiz review page @done(22-07-20 23:44)
+    ✔ build the user quiz page @done(22-07-21 01:21)
+    ✔ build the quiz details page @done(22-07-21 01:21)
+    ☐ build the take quiz page
+  test:
+    ☐ write test for the pages
+.
+General:
+  ☐ document the project with a README.md file
+  ☐ publish postman documentation
+  ☐ prepare short video
+.  
