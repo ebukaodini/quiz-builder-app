@@ -12,7 +12,6 @@ const StyledAnchorButton = styled.a`
   &:focus {
     outline: none !important;
     box-shadow: none !important;
-    border-color: ${props => props.theme.primary};
   }
 `
 const StyledLinkIconButton = styled(Link)`
@@ -50,12 +49,12 @@ export const LinkText: React.FC<LinkProps<unknown> & React.RefAttributes<HTMLAnc
 
 export const LinkButton: React.FC<LinkProps<unknown> & React.RefAttributes<HTMLAnchorElement>> = (props) => {
   if (!props["title"]) return <span /> // return a span to indicate to the user that the aria-label is needed before link is displayed
-  return <StyledLinkButton {...props} aria-label={props.title} className={`text-decoration-none btn ${props.className}`} />
+  return <StyledLinkButton {...props} aria-label={props.title} className={`text-decoration-none btn rounded-0 ${props.className}`} />
 }
 
 export const AnchorButton: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (props) => {
   if (!props["title"]) return <span /> // return a span to indicate to the user that the aria-label is needed before link is displayed
-  return <StyledAnchorButton {...props} aria-label={props.title} className={`text-decoration-none btn ${props.className}`} />
+  return <StyledAnchorButton {...props} aria-label={props.title} className={`text-decoration-none btn rounded-0 ${props.className}`} />
 }
 
 export const AnchorIconButton: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (props) => {

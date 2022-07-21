@@ -39,13 +39,13 @@ const StyledTextareaInput = styled.textarea`
     }
 `
 export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => {
-  return <StyledInput {...props} className={`form-control rounded-0 p-3 text-dark ${props.className}`} />
+  return <StyledInput {...props} className={`form-control rounded-0 py-2 px-3 text-dark ${props.className}`} />
 }
 
 export const TextareaInput: React.FC<React.InputHTMLAttributes<HTMLTextAreaElement>> = (props) => {
-  return <StyledTextareaInput rows={1} {...props} className={`form-control rounded-0 w-100 p-3 text-dark ${props.className}`} />
+  return <StyledTextareaInput rows={1} {...props} className={`form-control rounded-0 w-100 py-2 px-3 text-dark ${props.className}`} />
 }
 
 export const CheckboxInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => {
-  return <StyledInput {...props} type='checkbox' className={`form-check-input mb-2 border-dark text-dark ${props.className}`} />
+  return <StyledInput {...props} type='checkbox' className={`form-check-input border-dark text-dark ${props.className}`} />
 }

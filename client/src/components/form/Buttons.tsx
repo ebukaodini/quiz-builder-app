@@ -4,7 +4,6 @@ const StyledButton = styled.button`
   &:focus {
     outline: none !important;
     box-shadow: none !important;
-    border-color: ${props => props.theme.primary};
   }
 `
 const StyledIconButton = styled.button`

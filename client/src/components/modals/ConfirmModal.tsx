@@ -14,7 +14,7 @@ export const ConfirmModal: React.FC = () => {
           <div className="modal-content">
 
             <div className={`bg-${confirmProps?.context} border-${confirmProps?.context} pt-1`} />
-            <div className={`modal-body alert rounded-0 bg-white ${confirmProps?.context}Light text-${confirmProps?.context} m-0`}>
+            <div className={`modal-body alert rounded-0 alert-${confirmProps?.context} text-${confirmProps?.context} m-0`}>
 
               <div className="d-flex align-items-start mb-4">
 
@@ -33,7 +33,7 @@ export const ConfirmModal: React.FC = () => {
 
                 <button type="button"
                   name={confirmProps?.cancelText ?? 'No'}
-                  className={`ms-2 btn btn-sm btn-muted`}
+                  className={`ms-2 btn btn-sm btn-muted text-dark border-0 px-4`}
                   data-bs-dismiss="modal"
                   onClick={() => confirmProps?.onCancel!()}
                 >

@@ -7,12 +7,14 @@ const Wrapper = styled.div`
 
 type props = {
   children: JSX.Element | JSX.Element[]
+  noContainer?: boolean
   className?: string
 }
 
-export const PageWrapper: React.FC<props> = ({ children, className }) => {
+export const PageWrapper: React.FC<props> = ({ children, noContainer, className }) => {
+
   return (
-    <Wrapper className={`container bg-white text-dark vh-100 ${className}`}>
+    <Wrapper className={`${noContainer === false && 'container'} bg-white text-dark h-100 ${className}`}>
       {children}
     </Wrapper>
   )
