@@ -38,7 +38,7 @@ router.post('/',
         return Promise.reject('Please add atleast one question answer.')
 
       if (questions.every(question => {
-        return question.answers.filter(a => a.option.trim().length > 0 ).length > 0
+        return question.answers.filter(a => a.option.trim().length > 0).length > 0
       }) == false)
         return Promise.reject('Answer option cannot be empty.')
 
@@ -271,6 +271,8 @@ router.patch('/:permalink',
       if (errors.length > 0)
         return res.error('Invalid quiz link.')
 
+
+
       Quizzes.findOne({ permalink: req.params.permalink })
         .populate('user', 'firstname lastname -_id')
         .then(async quiz => {
@@ -300,12 +302,17 @@ router.delete('/:id',
       if (errors.length > 0)
         return res.error('Invalid quiz id.')
 
-      Quizzes.findByIdAndDelete(req.params.id)
-        .then(async _ => {
+      Quizzes.findById(req.params.id)
+        .then(async quiz => {
 
-          if (_ === null)
+          if (quiz === null)
             return res.error('Quiz with id does not exist.')
 
+          if (req.user !== quiz.user.toString())
+            return res.error('Only quiz creator can delete a quiz.')
+
+          quiz.deleteOne()
+          quiz.save()
           await Questions.deleteMany({ quiz: req.params.id })
           return res.success('Quiz deleted.')
         })
